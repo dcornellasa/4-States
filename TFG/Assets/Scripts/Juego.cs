@@ -14,7 +14,7 @@ public class Juego : MonoBehaviour
 
     public Button startButton;
     public Button resetButton;
-    public Text winAnnouncement;
+    public Text mensajeResultado;
 
 
     // Start is called before the first frame update
@@ -34,13 +34,15 @@ public class Juego : MonoBehaviour
     public void startJuego()
     {
 
-        botones[0].GetComponent<Image>().color = Color.red;
-        botones[1].GetComponent<Image>().color = Color.red;
-        botones[2].GetComponent<Image>().color = Color.red;
-        botones[3].GetComponent<Image>().color = Color.red;
-        botones[6].GetComponent<Image>().color = Color.red;
-        botones[7].GetComponent<Image>().color = Color.red;
-        botones[8].GetComponent<Image>().color = Color.red;
+        botones[0].GetComponentInChildren<Text>().text = "3";
+        botones[1].GetComponentInChildren<Text>().text = "1";
+        botones[2].GetComponentInChildren<Text>().text = "1";
+        botones[3].GetComponentInChildren<Text>().text = "2";
+        botones[4].GetComponentInChildren<Text>().text = "0";
+        botones[5].GetComponentInChildren<Text>().text = "0";
+        botones[6].GetComponentInChildren<Text>().text = "2";
+        botones[7].GetComponentInChildren<Text>().text = "1";
+        botones[8].GetComponentInChildren<Text>().text = "1";
 
         HabilitarTablero();
         startButton.interactable = false;
@@ -51,7 +53,7 @@ public class Juego : MonoBehaviour
     {
         resetTablero();
         InhabilitarTablero();
-        winAnnouncement.text = "";
+        mensajeResultado.text = "";
         startButton.interactable = true;
 
     }
@@ -64,87 +66,108 @@ public class Juego : MonoBehaviour
         {
 
             case "0":
-                cambiarColor(boton.GetComponent<Image>());
-                cambiarColor(botones[1].GetComponent<Image>());
-                cambiarColor(botones[3].GetComponent<Image>());
+                cambiarNum(boton.GetComponentInChildren<Text>());
+                cambiarNum(botones[1].GetComponentInChildren<Text>());
+                cambiarNum(botones[3].GetComponentInChildren<Text>());
 
                 break;
             case "1":
-                cambiarColor(boton.GetComponent<Image>());
-                cambiarColor(botones[0].GetComponent<Image>());
-                cambiarColor(botones[2].GetComponent<Image>());
-                cambiarColor(botones[4].GetComponent<Image>());
+                cambiarNum(boton.GetComponentInChildren<Text>());
+                cambiarNum(botones[0].GetComponentInChildren<Text>());
+                cambiarNum(botones[2].GetComponentInChildren<Text>());
+                cambiarNum(botones[4].GetComponentInChildren<Text>());
                 break;
             case "2":
-                cambiarColor(boton.GetComponent<Image>());
-                cambiarColor(botones[1].GetComponent<Image>());
-                cambiarColor(botones[5].GetComponent<Image>());
-                break;
-            case "3":
-                cambiarColor(boton.GetComponent<Image>());
-                cambiarColor(botones[0].GetComponent<Image>());
-                cambiarColor(botones[4].GetComponent<Image>());
-                cambiarColor(botones[6].GetComponent<Image>());
+                cambiarNum(boton.GetComponentInChildren<Text>());
+                cambiarNum(botones[1].GetComponentInChildren<Text>());
+                cambiarNum(botones[5].GetComponentInChildren<Text>());
 
                 break;
+            case "3":
+                cambiarNum(boton.GetComponentInChildren<Text>());
+                cambiarNum(botones[0].GetComponentInChildren<Text>());
+                cambiarNum(botones[4].GetComponentInChildren<Text>());
+                cambiarNum(botones[6].GetComponentInChildren<Text>());
+                break;
             case "4":
-                cambiarColor(boton.GetComponent<Image>());
-                cambiarColor(botones[1].GetComponent<Image>());
-                cambiarColor(botones[3].GetComponent<Image>());
-                cambiarColor(botones[5].GetComponent<Image>());
-                cambiarColor(botones[7].GetComponent<Image>());
+                cambiarNum(boton.GetComponentInChildren<Text>());
+                cambiarNum(botones[1].GetComponentInChildren<Text>());
+                cambiarNum(botones[3].GetComponentInChildren<Text>());
+                cambiarNum(botones[5].GetComponentInChildren<Text>());
+                cambiarNum(botones[7].GetComponentInChildren<Text>());
 
                 break;
             case "5":
-                cambiarColor(boton.GetComponent<Image>());
-                cambiarColor(botones[2].GetComponent<Image>());
-                cambiarColor(botones[4].GetComponent<Image>());
-                cambiarColor(botones[8].GetComponent<Image>());
+                cambiarNum(boton.GetComponentInChildren<Text>());
+                cambiarNum(botones[2].GetComponentInChildren<Text>());
+                cambiarNum(botones[4].GetComponentInChildren<Text>());
+                cambiarNum(botones[8].GetComponentInChildren<Text>());
 
                 break;
             case "6":
-                cambiarColor(boton.GetComponent<Image>());
-                cambiarColor(botones[3].GetComponent<Image>());
-                cambiarColor(botones[7].GetComponent<Image>());
+                cambiarNum(boton.GetComponentInChildren<Text>());
+                cambiarNum(botones[3].GetComponentInChildren<Text>());
+                cambiarNum(botones[7].GetComponentInChildren<Text>());
 
                 break;
             case "7":
-                cambiarColor(boton.GetComponent<Image>());
-                cambiarColor(botones[4].GetComponent<Image>());
-                cambiarColor(botones[6].GetComponent<Image>());
-                cambiarColor(botones[8].GetComponent<Image>());
+                cambiarNum(boton.GetComponentInChildren<Text>());
+                cambiarNum(botones[4].GetComponentInChildren<Text>());
+                cambiarNum(botones[6].GetComponentInChildren<Text>());
+                cambiarNum(botones[8].GetComponentInChildren<Text>());
 
                 break;
             case "8":
-                cambiarColor(boton.GetComponent<Image>());
-                cambiarColor(botones[5].GetComponent<Image>());
-                cambiarColor(botones[7].GetComponent<Image>());
+                cambiarNum(boton.GetComponentInChildren<Text>());
+                cambiarNum(botones[5].GetComponentInChildren<Text>());
+                cambiarNum(botones[7].GetComponentInChildren<Text>());
                 break;
             default:
                 break;
         }
 
-        checkForWin();
+        ComprobarVictoria();
     }
 
-    private void cambiarColor(Image image)
+    private void cambiarNum(Text text)
     {
-        if (image.color == Color.red)
+        if (text.text == "0")
         {
-            image.color = Color.white;
+            text.text = "1";
         }
-        else
+        else if (text.text == "1")
         {
-            image.color = Color.red;
+            text.text = "2";
+        }
+        else if (text.text == "2")
+        {
+            text.text = "3";
+        }
+        else if (text.text == "3")
+        {
+            text.text = "X";
+            HasPerdido();
         }
     }
+    private void HasPerdido()
+    {
+        foreach (Button boton in botones)
+        {
 
-    private void checkForWin()
+            boton.GetComponent<Image>().color = Color.red;
+        }
+
+        Debug.Log("¡Perdedor!");
+        mensajeResultado.text = "Has perdido...";
+        InhabilitarTablero();
+    }
+
+    private void ComprobarVictoria()
     {
         hasGanado = true;
         foreach (Button boton in botones)
         {
-            if (boton.GetComponent<Image>().color == Color.red)
+            if (boton.GetComponentInChildren<Text>().text != "3")
             {
                 hasGanado = false;
             }
@@ -152,7 +175,14 @@ public class Juego : MonoBehaviour
         if (hasGanado == true)
         {
             Debug.Log("¡Victoria!");
-            winAnnouncement.text = "¡HAS GANADO!";
+            mensajeResultado.text = "¡HAS GANADO!";
+
+            foreach (Button boton in botones)
+            {
+
+                boton.GetComponent<Image>().color = Color.green;
+            }
+            InhabilitarTablero();
         }
     }
 
