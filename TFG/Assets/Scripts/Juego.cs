@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System;
 
@@ -9,40 +10,39 @@ public class Juego : MonoBehaviour
 {
 
     public Button[] botones;
-    bool hasGanado;
+    public bool hasGanado;
 
 
     public Button startButton;
     public Button resetButton;
+    public Button siguienteButton;
+    public Button nivelesButton;
     public Text mensajeResultado;
+    public SonidosFinPartida sonidosFinPartida;
+    public ConfiguracionTablero configuracionTablero;
+    public CambiarEstadoBotones cambiarEstadoBotones;
 
 
-    // Start is called before the first frame update
     void Start()
     {
 
         InhabilitarTablero();
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
+        InhabilitarSiguiente();
 
     }
 
     public void startJuego()
     {
+        Scene escenaActual;
+        string nombreEscena;
 
-        botones[0].GetComponentInChildren<Text>().text = "3";
-        botones[1].GetComponentInChildren<Text>().text = "1";
-        botones[2].GetComponentInChildren<Text>().text = "1";
-        botones[3].GetComponentInChildren<Text>().text = "2";
-        botones[4].GetComponentInChildren<Text>().text = "0";
-        botones[5].GetComponentInChildren<Text>().text = "0";
-        botones[6].GetComponentInChildren<Text>().text = "2";
-        botones[7].GetComponentInChildren<Text>().text = "1";
-        botones[8].GetComponentInChildren<Text>().text = "1";
+        escenaActual = SceneManager.GetActiveScene();
+        nombreEscena = escenaActual.name;
+
+        //configuracionesInciales(nombreEscena);
+        configuracionTablero.configuracionInicial(nombreEscena);
+
+
 
         HabilitarTablero();
         startButton.interactable = false;
@@ -60,107 +60,23 @@ public class Juego : MonoBehaviour
 
     public void ClickBoton(Button boton)
     {
-
-        string targetButton = boton.name;
-        switch (targetButton)
-        {
-
-            case "0":
-                cambiarNum(boton.GetComponentInChildren<Text>());
-                cambiarNum(botones[1].GetComponentInChildren<Text>());
-                cambiarNum(botones[3].GetComponentInChildren<Text>());
-
-                break;
-            case "1":
-                cambiarNum(boton.GetComponentInChildren<Text>());
-                cambiarNum(botones[0].GetComponentInChildren<Text>());
-                cambiarNum(botones[2].GetComponentInChildren<Text>());
-                cambiarNum(botones[4].GetComponentInChildren<Text>());
-                break;
-            case "2":
-                cambiarNum(boton.GetComponentInChildren<Text>());
-                cambiarNum(botones[1].GetComponentInChildren<Text>());
-                cambiarNum(botones[5].GetComponentInChildren<Text>());
-
-                break;
-            case "3":
-                cambiarNum(boton.GetComponentInChildren<Text>());
-                cambiarNum(botones[0].GetComponentInChildren<Text>());
-                cambiarNum(botones[4].GetComponentInChildren<Text>());
-                cambiarNum(botones[6].GetComponentInChildren<Text>());
-                break;
-            case "4":
-                cambiarNum(boton.GetComponentInChildren<Text>());
-                cambiarNum(botones[1].GetComponentInChildren<Text>());
-                cambiarNum(botones[3].GetComponentInChildren<Text>());
-                cambiarNum(botones[5].GetComponentInChildren<Text>());
-                cambiarNum(botones[7].GetComponentInChildren<Text>());
-
-                break;
-            case "5":
-                cambiarNum(boton.GetComponentInChildren<Text>());
-                cambiarNum(botones[2].GetComponentInChildren<Text>());
-                cambiarNum(botones[4].GetComponentInChildren<Text>());
-                cambiarNum(botones[8].GetComponentInChildren<Text>());
-
-                break;
-            case "6":
-                cambiarNum(boton.GetComponentInChildren<Text>());
-                cambiarNum(botones[3].GetComponentInChildren<Text>());
-                cambiarNum(botones[7].GetComponentInChildren<Text>());
-
-                break;
-            case "7":
-                cambiarNum(boton.GetComponentInChildren<Text>());
-                cambiarNum(botones[4].GetComponentInChildren<Text>());
-                cambiarNum(botones[6].GetComponentInChildren<Text>());
-                cambiarNum(botones[8].GetComponentInChildren<Text>());
-
-                break;
-            case "8":
-                cambiarNum(boton.GetComponentInChildren<Text>());
-                cambiarNum(botones[5].GetComponentInChildren<Text>());
-                cambiarNum(botones[7].GetComponentInChildren<Text>());
-                break;
-            default:
-                break;
-        }
-
+        cambiarEstadoBotones.cambiarEstado(boton);
         ComprobarVictoria();
+
     }
 
-    private void cambiarNum(Text text)
+    public void SiguienteNivel()
     {
-        if (text.text == "0")
-        {
-            text.text = "1";
-        }
-        else if (text.text == "1")
-        {
-            text.text = "2";
-        }
-        else if (text.text == "2")
-        {
-            text.text = "3";
-        }
-        else if (text.text == "3")
-        {
-            text.text = "X";
-            HasPerdido();
-        }
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        InhabilitarSiguiente();
     }
-    private void HasPerdido()
+
+    public void volverANiveles()
     {
-        foreach (Button boton in botones)
-        {
-
-            boton.GetComponent<Image>().color = Color.red;
-        }
-
-        Debug.Log("¡Perdedor!");
-        mensajeResultado.text = "Has perdido...";
-        InhabilitarTablero();
+        SceneManager.LoadScene("MenuNiveles");
     }
+
+
 
     private void ComprobarVictoria()
     {
@@ -175,7 +91,10 @@ public class Juego : MonoBehaviour
         if (hasGanado == true)
         {
             Debug.Log("¡Victoria!");
+            sonidosFinPartida.SonidoCompletado();
             mensajeResultado.text = "¡HAS GANADO!";
+            HabilitarSiguiente();
+
 
             foreach (Button boton in botones)
             {
@@ -186,7 +105,7 @@ public class Juego : MonoBehaviour
         }
     }
 
-    private void InhabilitarTablero()
+    public void InhabilitarTablero()
     {
         foreach (Button boton in botones)
         {
@@ -202,6 +121,19 @@ public class Juego : MonoBehaviour
         }
     }
 
+    private void InhabilitarSiguiente()
+    {
+        siguienteButton.interactable = false;
+    }
+
+    private void HabilitarSiguiente()
+    {
+        siguienteButton.interactable = true;
+        siguienteButton.GetComponent<Image>().color = new Color(24 / 255f, 106 / 255f, 23 / 255f);
+    }
+
+
+
     private void resetTablero()
     {
         foreach (Button boton in botones)
@@ -210,3 +142,4 @@ public class Juego : MonoBehaviour
         }
     }
 }
+
